@@ -1,0 +1,32 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "a blog project for study",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zscumt123/node-blog.git"
+  },
+  "keywords": [
+    "blog",
+    "node"
+  ],
+  "author": "zs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zscumt123/node-blog/issues"
+  },
+  "homepage": "https://github.com/zscumt123/node-blog#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.14.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "nodemon": "^1.14.3"
+  }
+}
