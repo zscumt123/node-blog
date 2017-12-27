@@ -4,7 +4,8 @@
   "description": "a blog project for study",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,10 @@
   },
   "homepage": "https://github.com/zscumt123/node-blog#readme",
   "dependencies": {
-    "express": "^4.16.2"
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongoose": "^4.13.7",
+    "validator": "^9.2.0"
   },
   "devDependencies": {
     "eslint": "^4.14.0",
