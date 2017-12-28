@@ -1,6 +1,6 @@
 {
     "parserOptions": {
-        "ecmaVersion": 6
+        "ecmaVersion":8
     },
     "env": {
         "node": true
@@ -13,6 +13,7 @@
         "linebreak-style":"off",
         "indent": ["error",4],
         "no-plusplus":"off",
-        "object-curly-newline":"off"
+        "object-curly-newline":"off",
+        "func-names":"off"
     }
 }

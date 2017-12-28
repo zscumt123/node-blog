@@ -3,7 +3,7 @@
 */
 const mongoose = require('mongoose');
 
-const { Schema, model } = mongoose;
+const { Schema } = mongoose;
 
 const userSchema = new Schema({
     name: String,
@@ -15,5 +15,6 @@ const userSchema = new Schema({
 // userSchema.methods.findUser = function(cb) {
 //     return this.
 // }
-
-model('User', userSchema);
+mongoose.model('User', userSchema);
+// model('User', userSchema);
+console.log(123);

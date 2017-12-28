@@ -5,6 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const apiRouter = require('./routes');
+require('./models');
 
 const app = express();
 

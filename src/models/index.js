@@ -1,18 +1,21 @@
+
 /**
  * model
 */
 const mongoose = require('mongoose');
-
 const config = require('../config');
+const logger = require('../common/logger');
 
-const { model } = mongoose;
-mongoose.connect(config.dbUrl, (err) => {
+mongoose.Promise = Promise;
+// const { model } = mongoose;
+mongoose.connect(config.dbUrl, { useMongoClient: true }, (err) => {
     if (err) {
-        console.error('connect db error!');
+        logger.error('connect db error:', err.message);
         process.exit(1);
     }
+    logger.trace('connect db success!');
 });
 
 require('./userModel');
 
-exports.userModel = model('User');
+exports.UserModel = mongoose.model('User');
