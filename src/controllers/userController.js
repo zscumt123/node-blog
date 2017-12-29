@@ -9,7 +9,7 @@ const { formatWarnResponse } = require('../common/utils');
 
 const info = ['用户名', '密码', '重复密码', '邮箱'];
 
-const userLogin = async function (req, res, next) {
+const userRegister = async function (req, res, next) {
     const { username = '', pwd = '', rePwd = '', email = '' } = req.body;
     const val = [username, pwd, rePwd, email].findIndex(item => item === '');
     if (val !== -1) {
@@ -50,5 +50,5 @@ const userLogin = async function (req, res, next) {
 };
 
 module.exports = {
-    userLogin,
+    userRegister,
 };
