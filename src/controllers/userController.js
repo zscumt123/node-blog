@@ -9,7 +9,7 @@ const { formatWarnResponse } = require('../common/utils');
 
 const info = ['用户名', '密码', '重复密码', '邮箱'];
 
-const userLogin = async function (req, res) {
+const userLogin = async function (req, res, next) {
     const { username = '', pwd = '', rePwd = '', email = '' } = req.body;
     const val = [username, pwd, rePwd, email].findIndex(item => item === '');
     if (val !== -1) {
@@ -29,44 +29,24 @@ const userLogin = async function (req, res) {
         res.send(formatWarnResponse('两次输入的密码不一致'));
         return;
     }
-    const doc = await UserModel.findOne({ name: username });
-    if (doc) {
-        res.send(formatWarnResponse('用户名已存在'));
-    } else {
-        const md5 = crypto.createHash('md5');
-        const cryptoPwd = md5.update(pwd).digest('hex');
-        const userDoc = new UserModel({
-            name: username,
-            password: cryptoPwd,
-            email,
-        });
-        const result = await userDoc.save();
-        if (result) {
-            res.send({ code: 0, msg: '注册成功' });
+    try {
+        const doc = await UserModel.findOne({ name: username });
+        if (doc) {
+            res.send(formatWarnResponse('用户名已存在'));
         } else {
-            res.send({ code: -1, msg: '系统错误' });
+            const md5 = crypto.createHash('md5');
+            const cryptoPwd = md5.update(pwd).digest('hex');
+            const userDoc = new UserModel({
+                name: username,
+                password: cryptoPwd,
+                email,
+            });
+            await userDoc.save();
+            res.send({ code: 0, msg: '注册成功' });
         }
+    } catch (e) {
+        return next(e);
     }
-    // UserModel.findOne({ name: username }).then((doc) => {
-    //     console.log(doc);
-    //     if (doc) {
-    //         res.send(formatWarnResponse('用户名已存在'));
-    //     } else {
-    //         const userDoc = new UserModel({
-    //             name: username,
-    //             password: pwd,
-    //             email,
-    //         });
-    //         userDoc.save().then((result) => {
-    //             console.log(result);
-    //             if (result) {
-    //                 res.send({ code: 0, msg: '注册成功' });
-    //             } else {
-    //                 res.send({ code: -1, msg: '系统错误' });
-    //             }
-    //         });
-    //     }
-    // });
 };
 
 module.exports = {

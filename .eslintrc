@@ -14,6 +14,7 @@
         "indent": ["error",4],
         "no-plusplus":"off",
         "object-curly-newline":"off",
-        "func-names":"off"
+        "func-names":"off",
+        "consistent-return":"off"
     }
 }
