@@ -4,6 +4,7 @@
 */
 const express = require('express');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 
 const apiRouter = require('./routes');
 const logger = require('./common/logger');
@@ -13,6 +14,11 @@ require('./models');
 const app = express();
 
 app.use(bodyParser.json());
+app.use(session({
+    secret: 'zskey',
+    resave: false,
+    saveUninitialized: false,
+}));
 
 app.use('/api/v1', apiRouter);
 

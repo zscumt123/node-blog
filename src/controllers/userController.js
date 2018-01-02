@@ -5,7 +5,7 @@
 const crypto = require('crypto');
 const validator = require('validator');
 const { UserModel } = require('../models');
-const { formatWarnResponse } = require('../common/utils');
+const { formatWarnResponse, formatNormalResponse } = require('../common/utils');
 
 const info = ['用户名', '密码', '重复密码', '邮箱'];
 
@@ -42,7 +42,35 @@ const userRegister = async function (req, res, next) {
                 email,
             });
             await userDoc.save();
-            res.send({ code: 0, msg: '注册成功' });
+            res.send(formatNormalResponse('注册成功'));
+        }
+    } catch (e) {
+        return next(e);
+    }
+};
+
+const userLogin = async function (req, res, next) {
+    const { username = '', password = '' } = req.body;
+    if (username === '' || password === '') {
+        res.send(formatWarnResponse('用户名或密码不能为空'));
+        return;
+    }
+
+    try {
+        const md5 = crypto.createHash('md5');
+        const cryptoPwd = md5.update(password).digest('hex');
+        const doc = await UserModel.findOne({ name: username, password: cryptoPwd });
+        if (!doc) {
+            res.send(formatWarnResponse('用户名或密码不正确'));
+        } else {
+            req.session.regenerate((err) => {
+                if (err) {
+                    res.send(formatWarnResponse('登录失败'));
+                    return;
+                }
+                req.session.loginUser = doc.name;
+                res.send(formatNormalResponse('登录成功'));
+            });
         }
     } catch (e) {
         return next(e);
@@ -51,4 +79,5 @@ const userRegister = async function (req, res, next) {
 
 module.exports = {
     userRegister,
+    userLogin,
 };
