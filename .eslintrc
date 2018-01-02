@@ -15,6 +15,7 @@
         "no-plusplus":"off",
         "object-curly-newline":"off",
         "func-names":"off",
-        "consistent-return":"off"
+        "consistent-return":"off",
+        "no-underscore-dangle":"off"
     }
 }
