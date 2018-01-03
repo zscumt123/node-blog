@@ -1,4 +1,3 @@
-
 /**
  * userController
 */
@@ -79,11 +78,12 @@ const userLogin = async function (req, res, next) {
 };
 
 const userList = async function (req, res, next) {
+    const { pageSize = 10, pageNum = 1 } = req.query;
     try {
-        // const doc = await UserModel.find({}, 'name email update_Date create_Date');
-        const doc = await UserModel.find({});
-        console.log(doc);
-        res.send(formatNormalResponse(doc));
+        const count = UserModel.count();
+        const findResult = UserModel.find({}, 'name email update_Date create_Date').skip(+pageNum - 1).limit(+pageSize);
+        const [total, data] = await Promise.all([count, findResult]);
+        res.send(formatNormalResponse({ data, pageSize: +pageSize, pageNum: +pageNum, total }));
     } catch (e) {
         return next(e);
     }

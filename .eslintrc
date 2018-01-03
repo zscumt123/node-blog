@@ -16,6 +16,7 @@
         "object-curly-newline":"off",
         "func-names":"off",
         "consistent-return":"off",
-        "no-underscore-dangle":"off"
+        "no-underscore-dangle":"off",
+        "max-len":"off"
     }
 }
