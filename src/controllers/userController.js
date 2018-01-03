@@ -78,7 +78,19 @@ const userLogin = async function (req, res, next) {
     }
 };
 
+const userList = async function (req, res, next) {
+    try {
+        // const doc = await UserModel.find({}, 'name email update_Date create_Date');
+        const doc = await UserModel.find({});
+        console.log(doc);
+        res.send(formatNormalResponse(doc));
+    } catch (e) {
+        return next(e);
+    }
+};
+
 module.exports = {
     userRegister,
     userLogin,
+    userList,
 };
