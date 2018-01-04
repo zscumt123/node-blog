@@ -49,7 +49,6 @@ const userRegister = async function (req, res, next) {
 };
 
 const userLogin = async function (req, res, next) {
-    console.log(req.session);
     const { username = '', password = '' } = req.body;
     if (username === '' || password === '') {
         res.send(formatWarnResponse('用户名或密码不能为空'));
