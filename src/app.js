@@ -21,15 +21,14 @@ app.use(session({
     saveUninitialized: false,
 }));
 
-app.use((req, res, next) => {
-    console.log(req.session);
-    const { session: { loginUser }, path } = req;
-    if (path.indexOf('login') === -1 && !loginUser) {
-        res.send(formatSessionResponse());
-    } else {
-        next();
-    }
-});
+// app.use((req, res, next) => {
+//     const { session: { loginUser }, path } = req;
+//     if (path.indexOf('login') === -1 && !loginUser) {
+//         res.send(formatSessionResponse());
+//     } else {
+//         next();
+//     }
+// });
 
 app.use('/api/v1', apiRouter);
 

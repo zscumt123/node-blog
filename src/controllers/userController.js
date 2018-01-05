@@ -33,11 +33,11 @@ const userRegister = async function (req, res, next) {
         if (doc) {
             res.send(formatWarnResponse('用户名已存在'));
         } else {
-            const md5 = crypto.createHash('md5');
-            const cryptoPwd = md5.update(pwd).digest('hex');
+            // const md5 = crypto.createHash('md5');
+            // const cryptoPwd = md5.update(pwd).digest('hex');
             const userDoc = new UserModel({
                 name: username,
-                password: cryptoPwd,
+                password: pwd,
                 email,
             });
             await userDoc.save();
@@ -80,7 +80,8 @@ const userList = async function (req, res, next) {
     const { pageSize = 10, pageNum = 1 } = req.query;
     try {
         const count = UserModel.count();
-        const findResult = UserModel.find({}, 'name email update_Date create_Date').skip(+pageNum - 1).limit(+pageSize);
+        // const findResult = UserModel.find({}, 'name email update_Date create_Date').skip(+pageNum - 1).limit(+pageSize);
+        const findResult = UserModel.find({}).skip(+pageNum - 1).limit(+pageSize);
         const [total, data] = await Promise.all([count, findResult]);
         res.send(formatNormalResponse({ data, pageSize: +pageSize, pageNum: +pageNum, total }));
     } catch (e) {

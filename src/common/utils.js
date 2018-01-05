@@ -15,5 +15,5 @@ exports.formatErrorResponse = () => ({
 });
 exports.formatSessionResponse = () => ({
     code: 2,
-    msg: 'session过期！请重新登录',
+    msg: '未登录或者session过期,请登录！',
 });
