@@ -15,18 +15,28 @@ const userSchema = new Schema({
     email: String,
     create_Date: { type: Date, default: getTime },
     update_Date: { type: Date, default: getTime },
+    last_time: { type: Date, default: getTime },
     isAdmin: { type: Boolean, default: false },
 });
-userSchema.virtual('create_time').get(function () {
-    return moment(this.create_Date).format('YYYY-MM-DD HH:mm:ss');
-});
+userSchema.set('id', false);
+// userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toJSON', { getters: true });
+
+// userSchema.virtual('create_time').get(function () {
+//     return moment(this.create_Date).format('YYYY-MM-DD HH:mm:ss');
+// });
+// userSchema.virtual('update_time').get(function () {
+//     return moment(this.create_Date).format('YYYY-MM-DD HH:mm:ss');
+// });
+// userSchema.virtual('last_login_time').get(function () {
+//     return moment(this.last_time).format('YYYY-MM-DD HH:mm:ss');
+// });
 userSchema.path('password').set((val) => {
     const md5 = crypto.createHash('md5');
     const cryptoPwd = md5.update(val).digest('hex');
     return cryptoPwd;
 });
-// userSchema.path('create_Date').get(time => moment(time).format('YYYY-MM-DD HH:mm:ss'));
-// userSchema.path('update_Date').get(time => moment(time).format('YYYY-MM-DD HH:mm:ss'));
-// userSchema.set('toJSON', { getters: true, virtuals: false });
-// userSchema.set('toJSON', { virtuals: true });
+userSchema.path('create_Date').get(val => moment(val).format('YYYY-MM-DD HH:mm:ss'));
+userSchema.path('update_Date').get(val => moment(val).format('YYYY-MM-DD HH:mm:ss'));
+userSchema.path('last_time').get(val => moment(val).format('YYYY-MM-DD HH:mm:ss'));
 mongoose.model('User', userSchema);

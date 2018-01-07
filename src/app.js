@@ -14,21 +14,25 @@ require('./models');
 const app = express();
 
 app.use(bodyParser.json());
+// session
 app.use(session({
     secret: 'zskey',
-    cookie: { maxAge: 30000 },
-    resave: false,
+    cookie: { maxAge: 300000 },
+    resave: true,
+    rolling: true,
     saveUninitialized: false,
 }));
-
-// app.use((req, res, next) => {
-//     const { session: { loginUser }, path } = req;
-//     if (path.indexOf('login') === -1 && !loginUser) {
-//         res.send(formatSessionResponse());
-//     } else {
-//         next();
-//     }
-// });
+const filterPath = ['login', 'register'];
+app.use((req, res, next) => {
+    const { session: { loginUser }, path } = req;
+    // 过滤指定路由
+    const isFilterPath = filterPath.every(item => path.indexOf(item) === -1);
+    if (isFilterPath && !loginUser) {
+        res.send(formatSessionResponse());
+    } else {
+        next();
+    }
+});
 
 app.use('/api/v1', apiRouter);
 

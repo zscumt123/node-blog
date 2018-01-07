@@ -33,8 +33,6 @@ const userRegister = async function (req, res, next) {
         if (doc) {
             res.send(formatWarnResponse('用户名已存在'));
         } else {
-            // const md5 = crypto.createHash('md5');
-            // const cryptoPwd = md5.update(pwd).digest('hex');
             const userDoc = new UserModel({
                 name: username,
                 password: pwd,
@@ -62,12 +60,14 @@ const userLogin = async function (req, res, next) {
         if (!doc) {
             res.send(formatWarnResponse('用户名或密码不正确'));
         } else {
-            req.session.regenerate((err) => {
+            req.session.regenerate(async (err) => {
                 if (err) {
                     res.send(formatWarnResponse('登录失败'));
                     return;
                 }
+                await UserModel.update({ name: username }, { last_time: Date.now() });
                 req.session.loginUser = doc.name;
+                res.cookie('userName', doc.name);
                 res.send(formatNormalResponse({ _id: doc._id, name: doc.name }));
             });
         }
@@ -80,9 +80,10 @@ const userList = async function (req, res, next) {
     const { pageSize = 10, pageNum = 1 } = req.query;
     try {
         const count = UserModel.count();
-        // const findResult = UserModel.find({}, 'name email update_Date create_Date').skip(+pageNum - 1).limit(+pageSize);
-        const findResult = UserModel.find({}).skip(+pageNum - 1).limit(+pageSize);
+        // const findResult = UserModel.find({}, 'name email update_time create_time last_login_time isAdmin').skip(+pageNum - 1).limit(+pageSize);
+        const findResult = UserModel.find({}, {_v:0}).skip(+pageNum - 1).limit(+pageSize);
         const [total, data] = await Promise.all([count, findResult]);
+        console.log(data);
         res.send(formatNormalResponse({ data, pageSize: +pageSize, pageNum: +pageNum, total }));
     } catch (e) {
         return next(e);
