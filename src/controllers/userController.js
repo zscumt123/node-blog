@@ -77,13 +77,17 @@ const userLogin = async function (req, res, next) {
 };
 
 const userList = async function (req, res, next) {
-    const { pageSize = 10, pageNum = 1 } = req.query;
+    console.log(req.query);
+    const { pageSize = 10, pageNum = 1, sort = -1, sortField = 'create_Date' } = req.query;
+    if ([1, -1].indexOf(Number(sort)) === -1) {
+        res.send(formatWarnResponse('排序参数错误'));
+        return;
+    }
     try {
         const count = UserModel.count();
         // const findResult = UserModel.find({}, 'name email update_time create_time last_login_time isAdmin').skip(+pageNum - 1).limit(+pageSize);
-        const findResult = UserModel.find({}, {_v:0}).skip(+pageNum - 1).limit(+pageSize);
+        const findResult = UserModel.find({}, { _v: 0 }).sort({ [sortField]: sort }).skip((+pageNum - 1) * Number(pageSize)).limit(+pageSize);
         const [total, data] = await Promise.all([count, findResult]);
-        console.log(data);
         res.send(formatNormalResponse({ data, pageSize: +pageSize, pageNum: +pageNum, total }));
     } catch (e) {
         return next(e);
