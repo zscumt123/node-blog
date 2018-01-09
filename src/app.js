@@ -22,17 +22,19 @@ app.use(session({
     rolling: true,
     saveUninitialized: false,
 }));
-// const filterPath = ['login', 'register'];
-// app.use((req, res, next) => {
-//     const { session: { loginUser }, path } = req;
-//     // 过滤指定路由
-//     const isFilterPath = filterPath.every(item => path.indexOf(item) === -1);
-//     if (isFilterPath && !loginUser) {
-//         res.send(formatSessionResponse());
-//     } else {
-//         next();
-//     }
-// });
+const filterPath = ['login', 'register'];
+app.use((req, res, next) => {
+    console.log(req.session.cookie._expires);
+    const { session: { loginUser }, path } = req;
+    // 过滤指定路由
+    const isFilterPath = filterPath.every(item => path.indexOf(item) === -1);
+    if (isFilterPath && !loginUser) {
+        res.send(formatSessionResponse());
+    } else {
+        res.cookie('userName', loginUser, { maxAge: 1800000 });
+        next();
+    }
+});
 
 app.use('/api/v1', apiRouter);
 

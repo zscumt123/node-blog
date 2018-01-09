@@ -47,7 +47,8 @@ const userRegister = async function (req, res, next) {
 };
 
 const userLogin = async function (req, res, next) {
-    const { username = '', password = '' } = req.body;
+    const { username = '', password = '', isRember = false } = req.body;
+
     if (username === '' || password === '') {
         res.send(formatWarnResponse('用户名或密码不能为空'));
         return;
@@ -67,7 +68,18 @@ const userLogin = async function (req, res, next) {
                 }
                 await UserModel.update({ name: username }, { last_time: Date.now() });
                 req.session.loginUser = doc.name;
-                res.cookie('userName', doc.name);
+                res.cookie('userName', doc.name, { maxAge: 1800000 });
+                // 记住用户名
+                if (isRember) {
+                    try {
+                        const accout = JSON.stringify({ name: doc.name, isRember: true });
+                        res.cookie('accout', accout);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                } else {
+                    res.clearCookie('accout');
+                }
                 res.send(formatNormalResponse({ _id: doc._id, name: doc.name }));
             });
         }
@@ -77,7 +89,6 @@ const userLogin = async function (req, res, next) {
 };
 
 const userList = async function (req, res, next) {
-    console.log(req.query);
     const { pageSize = 10, pageNum = 1, sort = -1, sortField = 'create_Date' } = req.query;
     if ([1, -1].indexOf(Number(sort)) === -1) {
         res.send(formatWarnResponse('排序参数错误'));
