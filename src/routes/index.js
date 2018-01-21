@@ -11,7 +11,7 @@ router.post('/register', userRegister);
 router.post('/login', userLogin);
 router.get('/userlist', userList);
 
-router.route('/category/:id')
+router.route('/category/:id?')
     .get(getCategoryList)
     .post(addCategoryList)
     .put(updateCategroyList)
