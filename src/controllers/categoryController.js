@@ -3,6 +3,7 @@ const { CategoryModel } = require('../models');
 const { formatNormalResponse, formatWarnResponse } = require('../common/utils');
 
 const getCategoryList = async function (req, res, next) {
+    console.log(req);
     try {
         const doc = await CategoryModel.find({});
         res.send(formatNormalResponse(doc));
@@ -25,7 +26,7 @@ const addCategoryList = async function (req, res, next) {
         return next(e);
     }
 };
-const updateCategroyList = async function (req, res, next) {
+const updateCategoryList = async function (req, res, next) {
     const { id = '', name = '' } = req.body;
     if (!id || !validator.isMongoId(id) || !name) {
         res.send(formatWarnResponse('参数错误'));
@@ -65,6 +66,6 @@ const deleteCategoryList = async function (req, res, next) {
 module.exports = {
     getCategoryList,
     addCategoryList,
-    updateCategroyList,
+    updateCategoryList,
     deleteCategoryList,
 };

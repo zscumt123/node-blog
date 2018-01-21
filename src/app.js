@@ -36,13 +36,8 @@ app.use((req, res, next) => {
         res.cookie('userName', loginUser, { maxAge: 1800000 });
     }
     next();
-    // if (isFilterPath && !loginUser) {
-    //     res.send(formatSessionResponse());
-    // } else {
-    //     res.cookie('userName', loginUser, { maxAge: 1800000 });
-    //     next();
-    // }
 });
+
 
 app.use('/api/v1', apiRouter);
 
