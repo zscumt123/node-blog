@@ -15,3 +15,4 @@ const articleSchema = new Schema({
     article: String,
 });
 mongoose.model('Article', articleSchema);
+
