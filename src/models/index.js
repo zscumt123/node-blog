@@ -18,6 +18,8 @@ mongoose.connect(config.dbUrl, { useMongoClient: true }, (err) => {
 
 require('./userModel');
 require('./categoryModel');
+require('./articleModel');
 
 exports.UserModel = mongoose.model('User');
 exports.CategoryModel = mongoose.model('Category');
+exports.ArticleModel = mongoose.model('Article');

@@ -33,8 +33,7 @@ userSchema.set('toJSON', { getters: true });
 // });
 userSchema.path('password').set((val) => {
     const md5 = crypto.createHash('md5');
-    const cryptoPwd = md5.update(val).digest('hex');
-    return cryptoPwd;
+    return md5.update(val).digest('hex');
 });
 userSchema.path('create_Date').get(val => moment(val).format('YYYY-MM-DD HH:mm:ss'));
 userSchema.path('update_Date').get(val => moment(val).format('YYYY-MM-DD HH:mm:ss'));
