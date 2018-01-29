@@ -3,9 +3,9 @@ const { CategoryModel } = require('../models');
 const { formatNormalResponse, formatWarnResponse } = require('../common/utils');
 
 const getCategoryList = async function (req, res, next) {
-    console.log(req);
     try {
-        const doc = await CategoryModel.find({});
+        // const doc = await CategoryModel.find({});
+        const doc = await CategoryModel.findCategory();
         res.send(formatNormalResponse(doc));
     } catch (e) {
         return next(e);

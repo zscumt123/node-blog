@@ -5,6 +5,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const log4js = require('log4js');
 
 const apiRouter = require('./routes');
 const logger = require('./common/logger');
@@ -38,6 +39,7 @@ const filterPath = ['login', 'register'];
 //     next();
 // });
 
+app.use(log4js.connectLogger(logger, { level: 'auto' }));
 
 app.use('/api/v1', apiRouter);
 
