@@ -35,9 +35,47 @@ const addArticle = async function (req, res, next) {
     }
 };
 const getArticle = async function (req, res, next) {
+    const { pageSize = '10', pageNum = '1', startTime = '', endTime = '', categoryId = '' } = req.query;
+    if (!(validator.isNumeric(pageSize) && validator.isNumeric(pageNum))) {
+        res.send(formatWarnResponse('分页参数不能为空'));
+    }
 
-}
+    // todo 如何处理查询参数
+    let params = {};
+    if (startTime) {
+        params = {
+            createDate: { $gte: startTime },
+        };
+    }
+    if (endTime) {
+        if (params.createDate) {
+            params.createDate.$lte = endTime;
+        } else {
+            params = {
+                createDate: { $lte: endTime },
+            };
+        }
+    }
+    if (categoryId) {
+        params.categoryId = categoryId;
+    }
+
+    try {
+        const count = ArticleModel.find(params).count();
+
+        const result = ArticleModel
+            .find(params, { introduction: 0, __v: 0, commentsId: 0, article: 0 })
+            .sort({ createDate: -1 })
+            .skip((+pageNum - 1) * Number(pageSize))
+            .limit(+pageSize);
+        const [total, data] = await Promise.all([count, result]);
+        res.send(formatNormalResponse({ data, pageSize: +pageSize, pageNum: +pageNum, total }));
+    } catch (e) {
+        return next(e);
+    }
+};
 
 module.exports = {
     addArticle,
+    getArticle,
 };
