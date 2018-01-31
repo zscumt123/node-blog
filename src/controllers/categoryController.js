@@ -27,7 +27,7 @@ const addCategoryList = async function (req, res, next) {
     }
 };
 const updateCategoryList = async function (req, res, next) {
-    const { id = '', name = '' } = req.body;
+    const { _id: id = '', name = '' } = req.body;
     if (!id || !validator.isMongoId(id) || !name) {
         res.send(formatWarnResponse('参数错误'));
         return;
