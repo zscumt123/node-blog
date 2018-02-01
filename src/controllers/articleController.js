@@ -26,9 +26,9 @@ const addArticle = async function (req, res, next) {
             res.send(formatWarnResponse('该文章已经存在'));
             return;
         }
-        const doc = new ArticleModel({ title, categoryId, article, introduction });
+        const { category_name: categoryName = '' } = await CategoryModel.findOneAndUpdate({ _id: categoryId }, { $inc: { article_count: 1 } });
+        const doc = new ArticleModel({ title, categoryId, article, introduction, categoryName });
         await doc.save();
-        await CategoryModel.findOneAndUpdate({ _id: categoryId }, { $inc: { article_count: 1 } });
         res.send(formatNormalResponse('添加成功'));
     } catch (e) {
         return next(e);
