@@ -59,11 +59,9 @@ const getArticle = async function (req, res, next) {
     if (categoryId) {
         params.categoryId = categoryId;
     }
-
     try {
-        const count = ArticleModel.find(params).count();
-
-        const result = ArticleModel
+        const count = await ArticleModel.find(params).count();
+        const result = await ArticleModel
             .find(params, { introduction: 0, __v: 0, commentsId: 0, article: 0 })
             .sort({ createDate: -1 })
             .skip((+pageNum - 1) * Number(pageSize))
@@ -74,8 +72,27 @@ const getArticle = async function (req, res, next) {
         return next(e);
     }
 };
+const deleteArticle = async function (req, res, next) {
+    const { id = '' } = req.params;
+    console.log(id);
+    if (!validator.isMongoId(id)) {
+        res.send(formatWarnResponse('参数无效'));
+        return;
+    }
+    try {
+        const doc = await ArticleModel.findByIdAndRemove(id);
+        if (!doc) {
+            res.send(formatWarnResponse('此文章不存在'));
+            return;
+        }
+        res.send(formatNormalResponse('删除成功'));
+    } catch (e) {
+        return next(e);
+    }
+};
 
 module.exports = {
     addArticle,
     getArticle,
+    deleteArticle,
 };
