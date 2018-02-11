@@ -1,5 +1,5 @@
 const validator = require('validator');
-const { CategoryModel } = require('../models');
+const { CategoryModel, ArticleModel } = require('../models');
 const { formatNormalResponse, formatWarnResponse } = require('../common/utils');
 
 const getCategoryList = async function (req, res, next) {
@@ -38,6 +38,7 @@ const updateCategoryList = async function (req, res, next) {
             res.send(formatWarnResponse('无效的分类'));
         } else {
             await CategoryModel.findByIdAndUpdate(id, { category_name: name });
+            await ArticleModel.update({ categoryId: id }, { categoryName: name }, { multi: true });
             res.send(formatNormalResponse('修改成功'));
         }
     } catch (e) {
@@ -51,8 +52,13 @@ const deleteCategoryList = async function (req, res, next) {
         return;
     }
     try {
+        // 判断该分类下是否有文章存在
+        const hasArticle = await ArticleModel.findOne({ categoryId: id });
+        if (hasArticle) {
+            res.send(formatWarnResponse('该分类下存在文章，无法删除'));
+            return;
+        }
         const doc = await CategoryModel.findByIdAndRemove(id);
-        console.log(doc);
         if (doc) {
             res.send(formatNormalResponse('删除成功'));
         } else {

@@ -74,17 +74,19 @@ const getArticle = async function (req, res, next) {
 };
 const deleteArticle = async function (req, res, next) {
     const { id = '' } = req.params;
-    console.log(id);
     if (!validator.isMongoId(id)) {
         res.send(formatWarnResponse('参数无效'));
         return;
     }
     try {
         const doc = await ArticleModel.findByIdAndRemove(id);
+        console.log(doc);
         if (!doc) {
             res.send(formatWarnResponse('此文章不存在'));
             return;
         }
+        const _id = doc.categoryId;
+        await CategoryModel.findOneAndUpdate({ _id }, { $inc: { article_count: -1 } });
         res.send(formatNormalResponse('删除成功'));
     } catch (e) {
         return next(e);
